@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Envelope Apology</title>
+    <title>Apology Message</title>
     <style>
         * {
             margin: 0;
@@ -13,58 +13,43 @@
         }
         body {
             overflow: hidden;
+            background: linear-gradient(135deg, #ffe5ec, #d3eaff);
+        }
+        .center-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            text-align: center;
+            color: #ff6f91;
+            font-size: 2em;
+        }
+        .center-message h1 {
+            margin-bottom: 0.5em;
+        }
+        .scroll-button {
+            background: #ff6f91;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1em;
+            transition: background 0.3s ease;
+        }
+        .scroll-button:hover {
+            background: #fb5179;
+        }
+        .envelope-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background: linear-gradient(135deg, #ffe5ec, #d3eaff);
-            position: relative;
-        }
-        .background-decor {
-            position: absolute;
-            width: 100%;
-            height: 100%;
             overflow: hidden;
-        }
-        .cloud,
-        .heart,
-        .sparkle {
-            position: absolute;
-            opacity: 0.3;
-        }
-        .cloud {
-            width: 100px;
-            height: 60px;
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: -20px 20px 0 #ffffff, 20px 20px 0 #ffffff;
-            top: 20%;
-            left: 20%;
-        }
-        .heart {
-            width: 20px;
-            height: 20px;
-            background: pink;
-            top: 50%;
-            left: 10%;
-            clip-path: polygon(50% 0%, 0% 30%, 0% 100%, 50% 80%, 100% 100%, 100% 30%);
-        }
-        .sparkle {
-            width: 10px;
-            height: 10px;
-            background: yellow;
-            top: 30%;
-            right: 20%;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-        .initial-message {
-            text-align: center;
-            color: #ff6f91;
-            font-size: 2em;
-            position: absolute;
-            z-index: 1; /* Ensure it appears above the envelope */
-            opacity: 1;
-            transition: opacity 0.6s ease;
+            position: relative;
         }
         .envelope {
             position: relative;
@@ -74,10 +59,8 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.6s ease;
-            perspective: 1000px;
-            opacity: 0; /* Start invisible */
-            transform: translateY(20px); /* Start slightly below */
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            opacity: 1; /* Make envelope visible */
         }
         .flap {
             position: absolute;
@@ -143,59 +126,53 @@
                 width: 90%;
                 height: auto;
             }
-            .initial-message {
+            .center-message {
                 font-size: 1.4em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="background-decor">
-        <div class="cloud"></div>
-        <div class="heart"></div>
-        <div class="sparkle"></div>
-    </div>
-    <div class="initial-message">
+
+    <!-- Centered Apology Message Section -->
+    <div class="center-message">
         <h1>I'm So Sorry!</h1>
         <p>I messed up, but I’m here to make it up to you!</p>
+        <button class="scroll-button" onclick="scrollToEnvelope()">Read My Apology</button>
     </div>
-    <div class="envelope" onclick="toggleEnvelope()">
-        <div class="flap"></div>
-        <div class="content">
-            <h1>We're Sorry!</h1>
-            <div class="message-carousel">
-                <div class="message active">🐶 Forgive me, please?</div>
-                <div class="message">🐕 I’m paws-itively sorry!</div>
-                <div class="message">🐩 Can we still be fur-iends?</div>
+
+    <!-- Envelope Section -->
+    <div id="envelope-section" class="envelope-container">
+        <div class="envelope" onclick="toggleEnvelope()">
+            <div class="flap"></div>
+            <div class="content">
+                <h1>Sorry for not being able to come! Here’s a friendly dog to cheer you up!</h1>
+                <div class="message-carousel">
+                    <div class="message">🐕 I’m paws-itively sorry!</div>
+                    <div class="message active">🐶 Forgive me, please?</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleEnvelope() {
-            const envelope = document.querySelector(".envelope");
-            const initialMessage = document.querySelector(".initial-message");
-
-            // Hide initial message and show envelope
-            if (initialMessage) {
-                initialMessage.style.opacity = 0; // Fade out initial message
-                setTimeout(() => {
-                    initialMessage.style.display = 'none'; // Remove from flow
-                    envelope.style.opacity = 1; // Fade in envelope
-                    envelope.style.transform = 'translateY(0)'; // Move into view
-                    startCarousel(); // Start the carousel
-                }, 600); // Match with CSS transition duration
-            } else {
-                envelope.classList.toggle("open");
-            }
+        // Function to scroll down to the envelope section
+        function scrollToEnvelope() {
+            document.getElementById("envelope-section").scrollIntoView({ behavior: "smooth" });
         }
 
+        // Toggle envelope animation and start carousel when opened
+        function toggleEnvelope() {
+            const envelope = document.querySelector(".envelope");
+            envelope.classList.toggle("open");
+            startCarousel();
+        }
+
+        // Carousel functionality for rotating messages
         let currentMessage = 0;
         function startCarousel() {
             const messages = document.querySelectorAll(".message-carousel .message");
-            messages.forEach((msg) => {
-                msg.classList.remove("active");
-            });
+            messages.forEach((msg) => msg.classList.remove("active"));
             messages[currentMessage].classList.add("active");
             currentMessage = (currentMessage + 1) % messages.length;
             setTimeout(startCarousel, 2000); // Rotate every 2 seconds
